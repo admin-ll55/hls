@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>HLS Player</title>
+<style>
+*{
+    margin:0;
+    padding:0;
+}
+#player{
+    position:absolute;
+    width:100%!important;
+    height:100%!important;
+    overflow:hidden;
+}
+</style>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<script src="jwplayer/jwplayer.js"></script></head>
+<body>
+<div id="player"></div>
+<script>
+var temp = window.location.href.split("?")[1].split("&");
+var params = {}
+for (var i=0; i<temp.length; i++) {
+    var _ = temp[i].split("="), k = _[0], v = _[1];
+    params[k] = v;
+}
+var temp = document.cookie.split("; ");
+var cookie = {}
+for (var i=0; i<temp.length; i++) {
+    var _ = temp[i].split("="), k = _[0], v = _[1];
+    cookie[k] = v;
+}
+
+var vurl = params["v"];
+document.title = document.title||params["t"];
+
+var p = jwplayer("player");
+p.setup({
+    id: "player",
+    sources: [{"file":vurl}],
+    controls: true,
+    title: ""||params["t"],
+    displaytitle: true,
+    width: "100%",
+    height: "100%",
+    aspectratio: "16:9",
+    fullscreen: "true",
+    //image: "",
+    autostart: params["a"]==1?true:false,
+    preload: "none",
+    playbackRateControls: [0.5, 1, 1.25, 1.5, 2, 4],
+    aboutlink: "https://github.com/admin-ll55/",
+    abouttext: "By admin-ll55 (Click to visit)",
+    skin: {
+        name: "glow",
+    },
+    ga: {
+        label: "title"
+    },
+    /*tracks: [{
+        file: "",
+        kind: "thumbnails"
+    }]*/
+});
+p.setVolume(cookie["volume"]||p.getVolume());
+p.on("volume", function(e){
+    document.cookie = `volume=${p.getVolume()};`;
+});
+p.setPlaybackRate(parseFloat(cookie["pr"])||p.getPlaybackRate());
+p.on("playbackRateChanged", function(e){
+    document.cookie = `pr=${p.getPlaybackRate()};`;
+});
+</script>
+</body>
+</html>
