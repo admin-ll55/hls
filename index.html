@@ -36,8 +36,7 @@ for (var i=0; i<temp.length; i++) {
 var vurl = params["v"];
 document.title = document.title||params["t"];
 
-var p = jwplayer("player");
-p.setup({
+var p = jwplayer("player"), cfg = {
     id: "player",
     sources: [{"file":vurl}],
     controls: true,
@@ -51,8 +50,6 @@ p.setup({
     autostart: params["a"]==1?true:false,
     preload: "none",
     playbackRateControls: [0.5, 1, 1.25, 1.5, 2, 4],
-    aboutlink: "https://github.com/admin-ll55/",
-    abouttext: "By admin-ll55 (Click to visit)",
     skin: {
         name: "glow",
     },
@@ -63,7 +60,31 @@ p.setup({
         file: "",
         kind: "thumbnails"
     }]*/
-});
+};
+p.setup(cfg);
+
+setTimeout(function() {
+  document.querySelector('div[aria-label="Playback rates"]').style.display = "none";
+  var cpr = document.createElement("div");
+  cpr.style.display = "inline-block";
+  cpr.style.color = "white";
+  cpr.style.fontSize = "0.8em";
+  cpr.innerHTML = document.querySelector('div[aria-label="Playback rates"] li.jw-active-option').textContent;
+  cpr.addEventListener("click", function(){
+    var index = -1;
+    for (var i=0; i<cfg.playbackRateControls.length; i++) {
+      if (p.getPlaybackRate() == cfg.playbackRateControls[i]) {
+        break;
+      }
+    }
+    i = (i+1)%cfg.playbackRateControls.length;
+    p.setPlaybackRate(cfg.playbackRateControls[i]);
+    cpr.innerHTML = (cfg.playbackRateControls[i])+"x";
+  });
+  var tar = document.querySelector('div[aria-label="Playback rates"]');
+  tar.parentNode.insertBefore(cpr, tar);
+}, 1000);
+
 p.setVolume(cookie["volume"]||p.getVolume());
 p.on("volume", function(e){
     document.cookie = `volume=${p.getVolume()};`;
