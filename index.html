@@ -33,7 +33,8 @@ for (var i=0; i<temp.length; i++) {
     cookie[k] = decodeURIComponent(v);
 }
 
-var vurl = params["v"];
+var hash = window.location.hash;
+var vurl = params["v"]+(hash?"#"+hash:"");
 document.title = params["t"]||document.title;
 
 var p = jwplayer("player"), cfg = {
