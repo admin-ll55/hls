@@ -20,7 +20,8 @@
 <body>
 <div id="player"></div>
 <script>
-var temp = window.location.href.split("?")[1].split("&");
+var hash = window.location.hash;
+var temp = (window.location.href+(hash?"#"+hash:"")).split("?")[1].split("&");
 var params = {}, pk = "", pks = ["v", "a", "t"];
 for (var i=0; i<temp.length; i++) {
     var _ = temp[i].split("="), k = _[0], v = _[1];
@@ -41,8 +42,7 @@ for (var i=0; i<temp.length; i++) {
     cookie[k] = decodeURIComponent(v);
 }
 
-var hash = window.location.hash;
-var vurl = params["v"]+(hash?"#"+hash:"");
+var vurl = params["v"];
 document.title = params["t"]||document.title;
 
 var p = jwplayer("player"), cfg = {
