@@ -21,10 +21,15 @@
 <div id="player"></div>
 <script>
 var temp = window.location.href.split("?")[1].split("&");
-var params = {}
+var params = {}, pk = "", pks = ["v", "a", "t"];
 for (var i=0; i<temp.length; i++) {
     var _ = temp[i].split("="), k = _[0], v = _[1];
+    if (pks.indexOf(k) == -1) {
+      params[pk] += "&"+decodeURIComponent(k)+(v == undefined?"":"="+decodeURIComponent(v));
+       continue;
+    }
     params[k] = decodeURIComponent(v);
+    pk = k;
 }
 var temp = document.cookie.split("; ");
 var cookie = {}
